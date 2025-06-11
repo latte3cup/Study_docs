@@ -48,7 +48,32 @@ AWS 서비스는 아주 많은 서비스들로 구성
 : 2006년 초기 공식 출법
 
 ## AWS 글로벌 인프라
+- 리전 - AZ - POP(상호 접속 위치 : Points Of Preference) 등으로 구성
+- 리전에 속한 데이터는 고객 동의 없이 리전 외부로 이동 불가능
+- AZ 가 없는 지역은 LZ가 따로 운영되며 이는 근처 리전과 초고속으로 연결된 존. (기존 리전 보조)
+- POP는 물리적인 인프라 장소로서, 내부에 여러 엣지 서비스 노드들이 있음
+- 엣지 로케이션은 POP 안에서 콘텐츠 및 트래픽을 처리하는 엔드포인트 (일반적으로 리전 외부에 존재)
+- 실제론 **95% 이상의 트래픽이 상위 5~10% 콘텐츠에서 발생** 하므로 빠른 서비스 접근 가능
+- 리전별 엣지 캐시는 이 엣지 로케이션과 리전 사이에 있는 캐시 계층
+- 즉 하나의 POP는  엣지 로케이션 + 리전별 엣지 캐시
 
+## AWS의 보안과 준수해야 할 원칙
+- AWS는 공유 보안 모델을 채택
+- 클라우드 자체 보안은 AWS가, 클라우드 내의 보안은 고객이 책임짐
+ - 각종 글로벌 보안 인증을 획득함 (p.45 참고)
 
+## AWS 주요 제품 및 서비스
+#### 컴퓨트
+- Amazon Elastic Compute Cloude (EC2)
+- Amazon EC2 Auto Scaling
+- AWS Lambda
+- Amazon EC2 COntainer Service(ECS) : EC2 인스턴스에서 도커 컨테이너 실행
+- Amazon Elastic Kubernetes Service(EKS)
+- AWS Fargate : 컨테이너를 실행하기 위해 EC2/EKS 에서 사용할 수 있는 서버리스 컴퓨트 엔진
+- AWS Elastic Beanstalk : 웹 애플리케이션을 손쉽게 배포·관리할 수 있게 해주는 PaaS
+- Amazon Lightsail : 간단히 가상화된 보안서버(VPS)를 사용하고자하는 서비스
+- AWS Batch : 배치 컴퓨팅 작업을 효율적으로 처리하기 위한 서비스 
+- AWS Outposts : AWS의 물리적 하드웨어를 고객의 온프레미스 데이터센터에 설치하여 클라우드 서비스를 로컬에서 실행하게 해주는 하이브리드 클라우드 솔루션
 
-
+#### 네트워킹
+- Amazon Virtual Private Cloud : AWS 안에서 제공받는 논리적 네트워크 공간. 대부분의 서비스는 VPC 없이 사용 불가
