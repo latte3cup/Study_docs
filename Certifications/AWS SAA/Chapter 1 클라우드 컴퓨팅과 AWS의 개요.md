@@ -104,7 +104,7 @@ AWS 서비스는 아주 많은 서비스들로 구성
 - Amazon Elastic File System (EFS) : 클라우드에서 EC2 인스턴스를 활용하기 위한 쉽고 확장성 높은 공유 파일 스토리지 서비스 . 리눅스의 mnt/shared 에 여러 서버 붙는거랑 비슷
 - Amazon Storage Gateway : 온프레미스 스토리지와 Aws 스토로지의 통합 게이트웨이 서비스
 - Import/Export Options : 물리적 저장 장치를 통해 AWS에 방대한 데이터를 전송하는 방법 제공, 온/오프라인 전송을 모두 포함하는 형태
-- Amazon CloudFront : AWS의 글로벌 CDN 배포 서비스
+- Amazon CloudFront : AWS의 글로벌 CDN 배포 서비스 , 웹 호스팅도 가능
 
 #### 데이터베이스
 - Amazon Relational Database Service (RDS)
