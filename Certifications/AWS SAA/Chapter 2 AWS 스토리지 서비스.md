@@ -182,4 +182,38 @@ Amazon S3 RRS는 이제 사용 못함
 - `http://<bucket-name>.s3-website-<region>.amazonaws.com` 으로 개방됨
 - 이 S3 기능만으로는 https 불가
 
-##### 스토리지 서비스 상세
+### 스토리지 서비스 상세
+#### AWS S3 Glacier
+- 자기 테이프 스토리지 대체 - 자기 테이프 방식의 관리 비용이 없고 신뢰성 수준도 높음
+- 헬스케어/생명과학/과학 데이터 저장 - 의료 데이터등은 생성/이동/보관에 까다로운 규제 정책에 적합 등
+- 하나의 파일마다 해당 파일에 대한 아카이브가 생성되므로 zip/tar로 압축한뒤 업로드하면 더 저렴함
+	-  아카이브 는 1byte ~ 40TB , 업로드 개수 제한 없음. write-once 전략
+	- 100MB 이상의 경우 멀티파트 업로드 추천 (단일 최대 4GB)
+	- 아카이브는 데이터 금고 역할을 수행하는 볼트(Vault)에 저장 - 리전당 1000개 볼트
+	-  볼트는 일반 S3의 버킷과 같음
+	- 볼트 인벤토리라 불리는 아카이브 인덱스는 24시간 마다 갱신
+	- 아카이브 복구를 위해선 아카이브 아이디를 알아야하는데 토큰 처럼 발급만 하고 관리안하므로 사용자가 관리해야함.
+	- Retrieval Job 을 통해 Standard/Expedited/Bulk 로 복원
+
+ ---> 이건 레거시 볼트만 이용하는 경우에 해당함
+ 현재에는 볼트 (glacier)가 S3에 통합된 형태이고 S3로 관리하면 객체키로 관리하므로 더 관리가 편하고 용이해서 보통 S3 씀
+
+| 항목         | 레거시 Vault 기반            | 📌 S3 Glacier(Storage Class)                     |
+| ---------- | ----------------------- | ------------------------------------------------ |
+| 저장 단위      | Vault → Archive         | S3 버킷 → 객체(Key)                                  |
+| 저장 클래스     | 없음 (Glacier 자체)         | STANDARD / GLACIER / GLACIER_IR / DEEP_ARCHIVE 등 |
+| 객체 이름      | ❌ Archive ID만 존재        | ✅ Key (ex: `logs/2024/04.tar.gz`)                |
+| 저장 크기      | 1B~40TB                 | 동일                                               |
+| 멀티파트 업로드   | 전용 Glacier API로 직접 처리   | ✅ S3 멀티파트 방식 그대로 사용                              |
+| 버전 관리      | ❌ 불가                    | ✅ 가능 (S3 버전 관리 활용)                               |
+| 메타데이터      | ❌ 없음                    | ✅ S3 메타데이터, 태그 등 활용 가능                           |
+| 아카이브 수     | 제한 없음                   | 동일 (S3 객체 수와 동일 기준)                              |
+| Vault      | ✅ 필요                    | ❌ 없음                                             |
+| 복원 방식      | Retrieval Job           | ✅ `RestoreObject` API (Key 기반)                   |
+| 복원 대상      | Archive ID              | ✅ Key                                            |
+| 복원 지연      | Expedited/Standard/Bulk | 동일 (단, 호출 방식 다름)                                 |
+| 복원 상태 추적   | `describe-job`          | ✅ `head-object`로 복원 여부 확인                        |
+| Inventory  | ✅ Vault Inventory Job   | ❌ 필요 없음 (객체 목록 조회 가능)                            |
+| Archive ID | ❗사용자가 직접 관리             | ❌ 필요 없음 (Key로만 접근)                               |
+| Lock       | Vault Lock              | S3 Object Lock                                   |
+참고 : <https://insufficientlyadvanced.tech/posts/2021/glacier-deprecation/>
