@@ -4,6 +4,7 @@
 - 블록 스토리지: 데이터를 같은 크기의 블록으로 나누어 저장하고 각 블록의 고유 주소를 부여해 직접 접근하는 스토리지. EC2에서 자주 사용 (스냅샷) + EBS
 - 파일 스토리지 : 우리가 흔히 아는, 파일 단위로 데이터를 저장하고 경로 기반 접근.
 
+---- 
 
 ### S3 (Simple Stroage Service)
 - 객체 스토리지
@@ -217,3 +218,36 @@ Amazon S3 RRS는 이제 사용 못함
 | Archive ID | ❗사용자가 직접 관리             | ❌ 필요 없음 (Key로만 접근)                               |
 | Lock       | Vault Lock              | S3 Object Lock                                   |
 참고 : <https://insufficientlyadvanced.tech/posts/2021/glacier-deprecation/>
+
+----
+
+#### Amazon Elastic Block Store
+-  EC2 인스턴스를 위한 영구 스토리지. 즉 EC2 수명에 상관없이 존재
+- 네트워크에 부착되어 사용됨. 
+- EC2 를 실행하기 위한 부트 볼륨임 , (그냥 D하드처럼 위한 EBS를 붙일수도 있음)
+- 기본적으로 한 순간에는 하나의 EC2 - 하나의 EBS  (귀속 아님) 
+- 예외로 EBS Multi-Attach (io1, io2 전용)을 사용해 여러 EC2에 하나 EBS 가능하나 까다로움
+- 오직 같은 AZ 내에서만 탈부착 가능
+- Ec2 로컬 스토리지보다는 높은 가용성
+- 연간실패율 AFR: Annualized failure rate 은 0.1~0.2 퍼 수준
+- 종류 
+  1. Amazon Ec2 인스턴스 스토어
+  2. Amazon EBS SSD-기반 볼륨 : DB 및 부트 볼륨을 위함
+  3. Amazon EBS HDD-기반 볼륨 : 로그 처리 및 맵리듀스와 같은 처리 성능에 집중
+###### EC2 인스턴스 스토어
+- Ec2 실행시 하나씩 포함되는 자동 스토리지 EC2타입에 따라 하드 종류도 달라짐
+- 사용자가 타입 결정할 수 없음. 
+
+- 볼륨 상세 종류
+ 1. Amazon EBS Elastic Volume :  동적 용량 증대, 성능 튜닝/성능 저하 없이 볼륨 변경
+ 2. Amazon EBS-SSD Volume : 범용 SSD(gp2), 프로비전 IOPS SSD(io1)로 구분
+   - IOPS(Input/Output Operations Per Second) : 초당 입출력 처리 횟수
+   - gp2는  iops가 정해져 있으면 성능과 비용을 균형적으로 유지, io1 (최신 io2)는 사용자가 직접 IOPS를 지정할 수 있으며 고성능 중심, 해당 비용이 분리되어 있음.
+   - 보통  HDD - 7200RPM : ~100 IOPS , SSD SATA : 대충 ~50000 IOPS (편차가 큼) - 훨빠름
+   - gp2는 약 100~ 16000 IOPS (용량에 따라 비례하지만 제한이 16000) - 용량이커지면 병렬성 증가로 IOPS도 비례
+   - 1기가 용량당 약 3 IOPS의 증가함. gp2는 16TB이지만 5334기가 부터 16000 IOPS로 제한
+   - 1TB 이하는 보통 버스트 버킷(burst Bucket) 기능 사용 가능 : 사용한한 IOPS는 크레딧 킵되고 성수기에 사용됨. 
+   - io1는  ~64000 IOPS까지 가능 비율은 1:50  , io2는 ~256000 1:500
+  1. Amazon EBS-HDD 볼륨 
+   - 높은 빈도 입출력 및 처리 성능 최적화 HDD : (st1)
+   - 낮은 빈도 입출력 및 비용 절감형 **콜드 HDD** : (sc1)
