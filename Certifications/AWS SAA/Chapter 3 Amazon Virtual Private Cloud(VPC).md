@@ -126,3 +126,74 @@
 
 
 #### Transit Gateway
+- VPC 피어링을 full mesh 구조이므로 늘어나면 복잡하고 관리가 힘듬
+- Transit Gateway를 통해 모든 VPC와 **온프레미스 네트워크**를 하나의 게이트웨이에 집중하여 연결, 즉 게이트웨이가 스타형(허브-스포크(Hub-and-Spoke)) 구조의 중심에 자리잡게 됨
+- **3계층 ip 기반으로 라우팅** - 즉 패킷 Ip 목적지를 보고 다음 홉(next hop) 결정
+- 시간당 연결 요금 + 전송 데이터 처리 요금(GB 단위), 크로스리전인 경우 별도의 과금 추가.
+- 온프레미스와도 연결할수 있다는게 중요ㅕ
+
+---
+#### DNS와 VPC
+- 일반 DNS도 호스트네임 + 도메인 네임으로 구성됨 (FQDN: Fully Qualified Domain Name)
+	`[FQDN]           : www.example.com.
+	`[Hostname]       : www`  - 같은 네트워크·도메인 내에서 **개별 장치를 구분하는 이름**  
+	`[Domain Name]    : example.com` - **호스트가 속한 네임스페이스(영역)** 를 나타내는 이름
+	`[TLD]            : com` - 인터넷 주소 체계에서 “마지막 구분자”이자 최상위 범주
+- 모든 인스턴스는 반드시 프라이빗 IP를 가짐 (VPC 내부 통신을 위해 당연히 있어야함)
+- 또한 프라이빗 DNS 호스트 네임도  VPC 설정에 따라 자동 부여 가능함.
+- 퍼블릭 IP 는 기본 VPC엔 자동 부여되어있으나 커스텀 VPC는 비활성화되어 있음
+- `enableDnsHostnames` - 이는 퍼블릭/프라이빗 상관없이 DNS를 사용할 것인지 옵션
+- `enableDnsSupport` - AWS DNS 서버를 사용 - 즉 실제 DNS 변환 담당. 
+- 둘다 참이어야 작동하는것.
+
+##### DHCP 옵션 세트 (Dynamic Host Configuration Protocol)
+- 기본 도메인 네임 ,  DNS 서버 주소 등 VPC 인스턴스의 호스트 환경 설정에 사용
+- DHCP 옵션 세트는 자동으로 VPC에 추가됨.
+- 특히 DNS 서버를 AmazonProvidedDNS 라는 서버에 자동을 가리키도록 되어 있음
+- DHCP 옵션 세트는 생성 후 수정 불가하며 새로 만들어야됨
+- DHCP 통신은 인스턴스 부팅·재연결·임대갱신·환경변경 때마다 작동 
+- 그 뒤 DHCP 통신 응답으로 DNS 서버 주소를 받으므로 그 후 인스턴스와 DNS 서버가 통신.
+
+
+- DHCP 옵션 세트 필드 목록
+
+|필드 이름|설명|기본값 (서울 리전 예시)|예시 설정 값|
+|---|---|---|---|
+|**domain-name**|인스턴스가 속할 기본 도메인 이름(FQDN의 도메인 부분)|`ap-northeast-2.compute.internal`|`corp.local`|
+|**domain-name-servers**|인스턴스가 사용할 DNS 서버 주소 목록|`AmazonProvidedDNS` (VPC CIDR+2)|`AmazonProvidedDNS`, `8.8.8.8`|
+|**ntp-servers**|NTP(Network Time Protocol) 서버 주소|없음|`169.254.169.123`(AWS Time Sync), `10.0.0.10`|
+|**netbios-name-servers**|NetBIOS 이름 서버(WINS) 주소(Windows 네트워크용)|없음|`10.0.0.5`|
+|**netbios-node-type**|NetBIOS 이름 해석 방식|없음|`1`(B-node), `2`(P-node), `4`(M-node), `8`(H-node)|
+
+--- 
+
+##### 외부에서 VPC에 연결
+- 해당 종단을 모두 구성해야됨 (ipsec  터널 구성)
+1.  Virtual Private Gateway
+  - AWS 측 VPN 종단 장치, VPC에 연결되어 AWS 네트워크와 VPN 터널 형성
+  - Site-to-Site VPN 또는 Direct Connect에서 **AWS 쪽 엔드포인트**
+  - 하나의 VPC에만 연결 가능
+2.  Customer Gateway
+  - 기업(온프레미스) 네트워크 측 끝단
+  - 온프레미스 전용 vpn 클라이언트 사용
+  - 공인 IP 필수
+  - VPN 라우팅 방식을 BGP 또는 Static으로 설정
+
+- 주요 연결 옵션 방법
+
+| 방식             | AWS 측 끝단                                       | 온프레미스 끝단   | 주 라우팅  | 주요 용도                                                                                                                                                                                                                  |
+| -------------- | ---------------------------------------------- | ---------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 하드웨어 VPN       | **VGW/TGW**                                    | **CGW**    | 정적/BGP | 빠른 구축, 백업 회선, 지점 연결 ([AWS 문서](https://docs.aws.amazon.com/vpn/latest/s2svpn/how_it_works.html?utm_source=chatgpt.com "How AWS Site-to-Site VPN works"))                                                                |
+| Direct Connect | **DXGW/TGW/VGW**      (Direct Connect Gateway) | 전용선 라우터    | BGP    | 안정/저지연, 대역폭·비용 최적화 ([AWS 문서](https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html?utm_source=chatgpt.com "AWS Direct Connect Locations"))                                                           |
+| VPN CloudHub   | **VGW**                                        | 다수 **CGW** | BGP    | 지점↔지점 허브-스포크 중계 ([AWS 문서](https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/aws-vpn-cloudhub.html?utm_source=chatgpt.com "AWS VPN CloudHub"))                                                |
+| Software VPN   | **EC2(자체 VPN)**                                | SW/장비      | 구현에 따름 | 커스텀 기능/프로토콜, 소규모·특수 용도 ([AWS 문서](https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/introduction.html?utm_source=chatgpt.com "Introduction - Amazon Virtual Private Cloud Connectivity ...")) |
+|                |                                                |            |        |                                                                                                                                                                                                                        |
+상세 참고 [[AWS VPC 프라이빗 연결 4가지]]
+
+---
+
+###### VPC 흐름 로그
+-  VPC 내외부 트래픽 흐름에 대한 로그 확인
+- Amazon CloudWatch로 저장 및 확인 가능
+- 비용은 CLoudWatch
+
