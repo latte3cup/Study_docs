@@ -140,3 +140,92 @@
 10. AWS CloudTrail 활용 : 로그 파일을 잘 관리하여 감사에 도움
 
 ---
+#### AWS 보안 규정 프로그램 및 보안 표준
+- SOC 1/SSAE 16/ISAE 3402(기존 SAS 70)
+- SOC 2 , SOC 3
+- FISMA, DIACAP, and FedRAMP
+- DOD CSM Levels 1?5
+- PCI DSS Level 1
+- ISO 9001/ ISO 27001
+- ITAR
+- FIPS 140-2
+- MTCS Level 3
+
+- Criminal Justice Information Services (CJIS)
+- Cloud Security Alliance (CSA)
+- Family Educatuon Rights and Privacy Act(FERPA)
+- Health Insurance Portability and Accountability Act (HIPAA)
+- Motion Picture Association of America (MPAA)
+
+---
+#### AWS 공유 책임 모델 
+![[Pasted image 20250813185712.jpg]]
+###### AWS가 책임지는 영역: **Security of the Cloud**
+- 하드웨어, 네트워크, 시설, 데이터센터, 리전, 가용 영역(Availability Zones) 등 **클라우드 인프라 전체**의 물리적인 보안.
+- 하이퍼바이저, 운영 체제, 스토리지, 데이터베이스, 네트워킹 등 **AWS 서비스의 기반 기술**. -> 특히 PaaS 이상인 경우의 책임
+- IaaS인 경우에만 고객책임이 됨
+- 백엔드 시스템 관리, 패치, 물리적 보안, 환경 구성을 비롯한 모든 **기초 보안 통제**.  
+
+###### 고객이 책임지는 영역: **Security in the Cloud**
+- **사용자 데이터**, **애플리케이션**, **IAM 설정**, **네트워크 구성**, **운영체제 및 보안 패치**, **암호화**, **접근 제어** 등.
+- 서비스 종류(IaaS, PaaS, SaaS)에 따라 책임 범위가 달라짐. 예:
+    - EC2 사용 시: OS, 애플리케이션, 방화벽(Security Group) 구성까지 고객 책임. (IaaS)
+    - S3 사용 시: 데이터 암호화, 접근 제어, ACL 적용 등 고객이 관리. (SaaS)
+
+---
+### AWS 보안 제품 및 서비스 (중요도 낮음)
+1.  Resource Access Manager
+  - AWS 리소스를 다른 AWS 계정이나 조직과 안전하게 공유할 수 있게 해주는 서비스
+  - 리소스를 복사·이전 하는 것이 아닌, 하나의 리소스를 여러 계정이 함꼐 사용하도록 접근 권한 부여하는 방식
+2. AWS Secret Manager
+  - **데이터베이스 비밀번호, API 키, 토큰, 인증서** 와 같은 **민감 정보(Secret)** 를 안전하게 저장·관리하고, **자동으로 갱신·배포**해주는 서비스
+  - 실제 동작은 Lambda를 통해 해당 내용 수행
+3. Amazon GuardDuty
+  - AWS 계정과 워크로드, 데이터를 대상으로 **지속적인 위협 탐지(Threat Detection)** 를 수행하는 **관리형 보안 서비스**
+  - **에이전트 설치 불필요** — CloudTrail, VPC Flow Logs, DNS Logs 등 AWS 로그 데이터를 분석.
+  - 공격자의 정찰 행위, 인스턴스에 대한 위협, 계정에 대한 위협 감지
+4. Amazon Inspector
+  - AWS 워크로드에 대한 **자동 취약점 관리(Vulnerability Management)** 서비스
+  - EC2 인스턴스, 컨테이너 이미지(ECR), Lambda 함수 등을 지속적으로 스캔해 **보안 취약점과 잘못된 설정**을 탐지
+  - CVE(Common Vulnerabilities and Exposures) 데이터베이스, AWS 보안 권장 사항 등을 기준으로 평가
+5. Amazon Macie
+  - AWS 환경의 **민감 데이터(PII, Personal Identifiable Information)**를 자동으로 식별·분류·보호하는 서비스
+  - 주로 **Amazon S3** 버킷을 스캔하여, 개인정보·금융정보·민감 문서 등 데이터 노출 위험을 감지합니다.
+  - **기계 학습(ML)** 과 **패턴 매칭**을 사용해 자동으로 민감 정보 탐지.
+6. AWS Certificate Manager
+  - AWS에서 **SSL/TLS 인증서**를 쉽게 발급, 배포, 관리, 갱신할 수 있게 해주는 서비스
+  - 웹 사이트나 애플리케이션과 사용자 간 통신을 **HTTPS**로 암호화하여 보안을 강화
+  - **AWS 리소스와 자동 연동**이 가능하며, 인증서의 수동 관리 부담을 감소
+  - 즉 서버로서의 TLS 인증서를 관리함.
+7. AWS Web Application Firewall
+  - 웹 애플리케이션을 **SQL 인젝션, 크로스 사이트 스크립팅(XSS)** 등과 같은 애플리케이션 계층(OSI 7계층) 공격으로부터 보호하는 **관리형 방화벽 서비스**
+  - 규칙 기반 (IP주소, http 헤더, 쿼리, 바디 등) 필터링 + 트래픽 제어 등
+  - 이 또한 네트워크 앞단에서 동작하여 특정 서비스에 붙여서 사용
+8. AWS Sheild
+  - **DDoS(Distributed Denial of Service) 방어 서비스**입니다.  
+  - 네트워크 계층(L3~L4)과 일부 애플리케이션 계층(L7)의 대규모 트래픽 공격을 완화해 서비스 가용성을 보호하는 역할
+  - Standard는 무료, Advanced 유로
+
+| 구분    | AWS Shield                         | AWS WAF                               |
+| ----- | ---------------------------------- | ------------------------------------- |
+| 보호 범위 | 주로 L3~L4 DDoS, 일부 L7 공격            | 주로 L7 웹 공격(OWASP Top 10 등)            |
+| 작동 방식 | 네트워크 트래픽 패턴 분석·차단                  | HTTP/HTTPS 요청 내용 분석·필터링               |
+| 적용 대상 | CloudFront, Route 53, ALB, NLB, GA | CloudFront, ALB, API Gateway, AppSync |
+| 비용    | Standard 무료 / Advanced 유료          | 사용량 기반 유료                             |
+| 보안 목적 | 가용성 유지                             | 취약점 악용 차단                             |
+9. AWS CloudHSM
+  - AWS에서 제공하는 **전용 하드웨어 보안 모듈(Hardware Security Module, HSM)** 서비스
+  - 암호 키를 클라우드에서 생성·저장·관리하되, **고객이 직접 키를 완전하게 소유·제어**할 수 있도록 설계
+  - **HSM**: 물리적으로 보안이 강화된 하드웨어 장치로, 암호 키 생성·저장·암호화·복호화 연산을 안전하게 수행.
+  -  **CloudHSM**: AWS가 HSM 하드웨어를 관리하지만, 키의 생성과 사용 권한은 전적으로 고객이 가짐.
+10. AWS KMS (Key Management Service)
+  - 관리형 키 관리 서비스
+   - 대칭·비대칭 암호 키를 생성·저장·관리하고, AWS 서비스 및 애플리케이션에서 안전하게 사용할 수 있도록 지원
+
+|항목|AWS CloudHSM|AWS KMS|
+|---|---|---|
+|키 소유권|100% 고객 소유|AWS 관리(고객은 논리적 접근만)|
+|보안 인증|FIPS 140-2 Level 3|FIPS 140-2 Level 2|
+|사용 편의성|직접 키 관리 필요|자동화·간편|
+|통합 범위|표준 암호 API, 맞춤형 암호화 가능|AWS 서비스와 긴밀하게 통합|
+|비용|HSM 인스턴스 시간당 요금|API 호출당 요금|
