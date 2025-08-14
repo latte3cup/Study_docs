@@ -21,6 +21,48 @@
 
 ###### 스케일 업/다운 서비스
 - DynamoDB Auto Scaling
-- Aurora Serverless v2 등
+- Aurora Serverless v2 등 +(스케일 아웃/인)
+
+---
+#### AWS Auto Scaling절차 흐름
+
+1. **리소스 먼저 생성**
+    - EC2 → Auto Scaling 그룹 생성
+    - DynamoDB → 테이블 생성
+    - Aurora → 클러스터 생성
+2. **AWS Auto Scaling 콘솔로 이동**
+    - “조정 계획 생성” 클릭
+3. **대상 리소스 선택**
+    - 기존에 만든 Auto Scaling 그룹, DB, ECS 서비스 등 선택
+4. **스케일링 방식 설정**
+    - 목표 추적(Target Tracking)
+    - 예약 스케일링(Scheduled Scaling)
+    - 예측 스케일링(Predictive Scaling)
+5. **검토 후 생성**
+    - CloudWatch와 연동되어 자동 확장/축소 시작
+
+#### 1. 조정 계획 생성 - 조정 가능한 리소스 찾기
+1. CloudFormation 스택별 검색
+	-  AWS CloudFormation으로 만든 리소스만 대상(EC2 Auto Scaling 그룹, ECS 서비스, DynamoDB 테이블 등)
+	- CloudFormation 템플릿으로 배포한 경우, 해당 스택 이름을 기준으로 검색해 선택
+2. 태그로 검색
+	- 리소스에 부여된 **태그(Key-Value)** 를 기준으로 검색
+	- Aurora DB 클러스터, Auto Scaling 그룹, DynamoDB 테이블과 보조 인덱스에서도 태그 이용 가능
+3. EC2 Auto Scaling 그룹 
+	- 이미 존재하는 EC2 Auto Scaling 그룹을 직접 선택
+	- 조정 계획에 포함할 Auto Scaling 그룹을 지정하고, 이후 목표 추적(타깃 트래킹), 예약 스케일링 등을 설정
+
+#### 2. 조정 계획 생성 - 조정 전략 지정
+- 스케일링 전략은 (운영 목표 기반의 옵션) 총 4가지가 있음
+
+|전략|설명|장점|단점|적합 사례|
+|---|---|---|---|---|
+|**가용성 기준 최적화**(Optimize for availability)|수요 변화에 빠르게 대응해 가용성을 최우선으로 유지. Scale Out 속도 빠르고, Scale In은 느림.|순간 부하 폭증에도 안정성 보장|유휴 리소스가 많아 비용 증가 가능|게임 서버 채널, 금융 거래 서버 등 순간 트래픽 급증 환경|
+|**가용성과 비용의 균형**(Balanced availability and cost)|성능과 비용 절감을 균형 있게 유지. Scale Out/Scale In 반응 속도 모두 중간 수준.|대부분의 서비스에 안정적인 선택|순간 부하 대응이 가용성 중심보다 다소 느림|일반 웹 서비스, API 서버, SaaS|
+|**비용 기준 최적화**(Optimize for cost)|비용 절감을 최우선. Scale In 속도 빠르고, Scale Out은 느림.|리소스 사용 최소화로 비용 절감 극대화|부하 급증 시 성능 저하 가능|트래픽 예측이 가능한 내부 백엔드, 배치 처리|
+|**사용자 지정**(Custom)|사용자가 직접 확장/축소 민감도, 쿨다운 시간 등 모든 파라미터를 설정.|상황별로 최적화 가능|잘못 설정 시 과도한 증감 또는 성능 저하 위험|특수한 부하 패턴이나 세밀 제어가 필요한 서비스|
+- 이 4가지마다 **예측 스케일링 옵션 + 동적 스케일링 옵션** 추가 가능
+- 예측 스케일링은 “미리 대비”, 동적 스케일링은 “실시간 보정”  
+- 전략은 이 두 가지 스케일링 방식에서 **얼마나 여유를 둘지, 얼마나 빨리 반응할지**를 결정하는 기준이 됨
 
 ---
