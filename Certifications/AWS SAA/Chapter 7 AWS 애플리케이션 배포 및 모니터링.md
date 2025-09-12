@@ -62,4 +62,34 @@
 
 ---
 
-#### Amazon API Gateway
+#### Amazon API Gateway - 서버리스
+- WS에서 완전관리형(Managed Service)으로 제공하는 API 게이트웨이. 서버를 직접 띄우지 않고, AWS가 인프라를 운영.
+- 백엔드 HTTP  엔드포인트, AWS 람다 함수 또는 기타 AWS 서비스에 연결하기 위한 레스트풀 API 생성, 배포 관리
+- 프론트엔드 HTTP 엔드포인트를 통해 외부로 노출된 API 호출 (즉 외부 공개 API)
+- API 호출 및 전송된 데이터의 양에 따라 과금 
+- 지원하는 API 유형
+	1. REST API : 사용량 계획, API 키, API 배포 및 수익화 등 다양한 관리 기능 제공
+	2. WebSocket API : 클라이언트와 지속형 연결 유지 기능 제공
+	3. Http API : 람다함수 또는 HTTP 백엔드의 프록시 역할을 하는 API 구현에 최적화.
+- 장점
+	1. 확장성과 관리 효율
+		- **완전관리형 서비스**라 서버 인프라 구성 및 확장, 운영체제·보안 패치 관리가 불필요
+		- **대규모 동시 호출** 처리: 수백만 건의 API 호출도 효과적으로 처리 가능 
+	2. 다양한 인증·보안 기능
+		- **IAM 역할(Auth)**, **Lambda Authorizer**, **Amazon Cognito** 등 다양한 인증 방식 지원 
+		- **AWS WAF(Web Application Firewall)**로 API에 대한 방화벽 규칙 적용 가능 
+	3. 모니터링 및 배포 지원
+		- **CloudWatch**를 통한 호출 수, 지연 시간, 오류율 등 다양한 메트릭 모니터링 가능
+		- **캔더리(추단계) 배포**를 통해 안전하게 새로운 버전 배포 가능
+	4. 비용 및 성능 최적화 (HTTP APIs)
+		- HTTP APIs는 **REST APIs보다 비용이 낮고 지연도 짧음**
+		- **자동 배포(auto deploy)**, **CORS (Cross-Origin Resource Sharing)** 지원 자동화
+	5. 백엔드 통합 유연성
+		- AWS Lambda, EC2, ECS, 외부 HTTP 엔드포인트, VPC 내부의 ALB/NLB, Cloud Map 등 다양한 백엔드로 통합 가능
+		- 특히 HTTP APIs는 private integration (VPC 환경의 로드밸런서 포함)도 지원
+	6. 라이플 사이클 관리
+		- 동일한 API의 다양한 버전 관리 가능
+	7. Open API 명세서 (Swagger)(2.0) 및 3.0 지원
+	8. iOS, Android, JavaScript용  SDK 지원으로 API-Gateway 관리 및 제어가능
+
+--- 
