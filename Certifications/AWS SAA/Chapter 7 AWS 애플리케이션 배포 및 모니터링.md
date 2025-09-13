@@ -349,3 +349,21 @@ Amazon Kinesis는 크게 네 가지 서비스로 나뉩니다.
 - Cloudwatch로 WAF의 실시간 처리 결과를 1분 메트릭스로 확인 및 모니터링 가능
 
 --- 
+#### Amazon Sheild
+- DDoS(분산 서비스 거부 공격, Distributed Denial of Service) 방어 서비스
+
+#####  1.  AWS Shield Standard
+- **모든 AWS 고객에게 자동 제공, 무료**
+- L3/L4 계층의 일반적인 DDoS 공격을 완화
+- 예: SYN Flood, UDP Reflection, DNS Query Flood 등
+- CloudFront, Route 53, ALB, Global Accelerator 같은 **엣지 서비스**에 자동 적용
+##### 2. AWS Shield Advanced (유료, 엔터프라이즈급)
+- 더 강력한 보호 및 운영 지원 제공
+- 기능:
+    1. **확장된 DDoS 방어** (대규모 공격, 애플리케이션 계층 L7 공격 포함)
+    2. **AWS DRT (DDoS Response Team)** 24/7 지원
+    3. **비용 보호**: DDoS로 인한 확장 비용(예: Auto Scaling, CloudFront 데이터 전송료) 보상
+    4. **세밀한 탐지/대응**: CloudWatch 지표, 경보와 통합
+    5. **다른 보안 서비스와 통합**: WAF, Firewall Manager와 연계
+
+---
