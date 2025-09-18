@@ -504,3 +504,32 @@ Amazon Kinesis는 크게 네 가지 서비스로 나뉩니다.
 작성 코드 -> 리전 -> 스택  -> 환경 생성(인프라) -> RDS -> 배포 완료 및 헬스체크
 
 ---
+#### AWS  OpsWorks
+- **구성 관리(Configuration Management) 서비스**.
+- Chef와 Puppet 같은 오픈소스 자동화 툴을 AWS에서 관리형으로 제공.
+- 인프라 서버 설정, 애플리케이션 배포, 패키지 설치, 업데이트, 모니터링 등을 코드로 관리
+- 테라폼(=하드웨어 레벨) 과 유사한 IaC 기반 서비스
+- 하지만 테라폼은 인프라 리소스 중심이라면 , Ops Work는 **서버 구성 관리** 중심
+- 즉 소프트웨어 레벨의 Iac 임. (패키지, 설정 등)
+
+##### OpsWorks 구조
+ **Stacks → Layers → Instances → Apps** 구조
+1. **Stack (스택)**
+    - 하나의 애플리케이션 시스템 전체를 표현.
+    - 예: “전자상거래 웹서비스 Stack” (웹, 앱, DB 포함).
+2. **Layer (레이어)**
+    - 스택 안에서 역할별 그룹.
+    - 예: Web Layer (Apache/Nginx), App Layer (애플리케이션 서버), DB Layer (MySQL).
+3. **Instance (인스턴스)**
+    - 각 레이어에서 실제 실행되는 EC2 인스턴스.
+    - 레이어에 속한 인스턴스는 Chef/Puppet 레시피에 따라 자동 설정됨.
+4. **App (애플리케이션)**
+    - 스택에 배포되는 실제 앱 코드.
+    - Git, S3, HTTP 서버 등에서 가져와 배포.
+
+##### OpsWorks 도구
+- **OpsWorks Stacks** → Chef Solo 기반, AWS 특화 간단 배포
+- **OpsWorks for Chef Automate** → Chef 서버 완전 제공
+- **OpsWorks for Puppet Enterprise** → Puppet 서버 완전 제공
+
+---
