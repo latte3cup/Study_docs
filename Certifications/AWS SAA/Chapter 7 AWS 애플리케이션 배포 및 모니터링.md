@@ -533,3 +533,4 @@ Amazon Kinesis는 크게 네 가지 서비스로 나뉩니다.
 - **OpsWorks for Puppet Enterprise** → Puppet 서버 완전 제공
 
 ---
+#### Amazon Cognito
