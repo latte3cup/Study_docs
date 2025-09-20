@@ -637,7 +637,7 @@ AWS 리소스 : **클라우드에서 생성·관리·감시·청구되는 개체
 
 ###### 이 외에도  CloudWatch Contributor Insights, CloudWatch Synthetics, CloudWatch RUM (Real User Monitoring) 등이 있음
 
-###### 단 한줄로 표현하면 CloudWatch는 "지금 리소스 상태가 어떤지"를 기록 및 파악
+###### 단 한줄로 표현하면 CloudWatch는 "지금 리소스 상태가 어떤지"를  파악하는 중앙 집중형 플랫폼
 ---
 
 #### AWS CloudTrail
@@ -656,3 +656,4 @@ AWS 리소스 : **클라우드에서 생성·관리·감시·청구되는 개체
 ###### 단 한줄로 표현하면 CloudTrail은 "누가 언제 무슨 요청을 했는지"를 기록
 
 ---
+
