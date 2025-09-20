@@ -5,6 +5,7 @@
 - [[#Amazon Route 53|Amazon Route 53]]
 
 
+### 애플리케이션 배포
 
 
 #### AWS Lambda
@@ -593,7 +594,7 @@ Amazon Kinesis는 크게 네 가지 서비스로 나뉩니다.
 테라폼과 기능적은 완전 거의 동일. 테라폼의 상태 파일 + 코드 집합이 AWS CloudFormation의 스택 역할을 하는 것.
 
 ---
-
+---
 ---
 
 ### AWS 모니터링 서비스
