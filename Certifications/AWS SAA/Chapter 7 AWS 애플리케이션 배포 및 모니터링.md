@@ -594,7 +594,65 @@ Amazon Kinesis는 크게 네 가지 서비스로 나뉩니다.
 테라폼과 기능적은 완전 거의 동일. 테라폼의 상태 파일 + 코드 집합이 AWS CloudFormation의 스택 역할을 하는 것.
 
 ---
----
+부록
+AWS 리소스 : **클라우드에서 생성·관리·감시·청구되는 개체**로 이해
+- 특히 운영 관점에서 모든 리소스 변경은 **제어면(Control Plane) API 호출**로 기록
+- **AWS 클라우드트레일(AWS CloudTrail)** 이 이 호출 내역(누가, 언제, 어디서, 무엇을)을 수집하여 S3/CloudWatch Logs로 전달
+
 ---
 
 ### AWS 모니터링 서비스
+
+
+#### AWS CloudWatch
+- 모든 AWS의 리소스를 모니터링 하기 위한 서비스
+- 일종의 **중앙 모니터링 플랫폼**.
+- 지표(Metric), 로그(Log), 이벤트(Event)를 수집하고 대시보드로 시각화.
+- 알람을 걸어 임계치 초과 시 알림(SNS)이나 자동 조치 수행.
+- CloudWatch = **Metrics + Logs + Events + Alarm + Dashboard**
+- 주요기능
+	1. CloudWatch Metrics : 
+		- AWS 서비스 기본 지표 제공 + Custom Metrics로 애플리케이션 데이터도 전송 가능
+		- 기본적으로 표준 모니터링 시간 단위는 1분. 1초까지 임의 조정 가능 (특정 서비스 제외)
+		```
+			- **1초 ~ 1분 단위 데이터**: 15일 보존
+			- **5분 단위 집계 데이터**: 63일 (약 2개월) 보존
+			- **1시간 단위 집계 데이터**: 455일 (약 15개월) 보존 
+		```
+	2. CloudWatch Logs :
+		- EC2, Lambda, API Gateway, CloudTrail, 애플리케이션 로그 수집 
+		- Logs Insights로 SQL 같은 쿼리로 대화형 분석 가능
+	3. CloudWatch Events (이제 EventBridge로 확장됨)
+		- 리소스 상태 변화 이벤트 감지.
+		- 특정 패턴에 맞춰 Lambda 실행, Step Functions 시작 가능.
+	4. **CloudWatch Alarms**
+		- 특정 지표 조건 만족 시 알람 발생.
+		- 예: “EC2 CPU > 80% for 5 minutes” → Slack 알림 또는 Auto Scaling 실행.
+			- OK -> 성능 지표가 정의된 기준치 내에 있음
+			- Alarm : 성능 지표가 정의된 기준치 밖에 있음
+			- INSUFFICIENT_DATA : 알람이 막 시작 됬으나 성능 지표 부족하거나 알람 유지하기에 데이터 부족
+	5. **CloudWatch Dashboards**
+		- 운영자 맞춤형 모니터링 화면 구성.
+		- 여러 서비스 지표를 한눈에 확인.
+
+###### 이 외에도  CloudWatch Contributor Insights, CloudWatch Synthetics, CloudWatch RUM (Real User Monitoring) 등이 있음
+
+###### 단 한줄로 표현하면 CloudWatch는 "지금 리소스 상태가 어떤지"를 기록 및 파악
+---
+
+#### AWS CloudTrail
+- **AWS 계정에서 발생하는 모든 API 호출과 관련 이벤트를 기록·추적하는 서비스**
+#####  핵심 개념
+- **API 호출 기록 서비스**
+    - 누가(사용자·역할), 언제, 어디서(IP/Region), 무엇을(AWS 서비스·리소스), 어떻게(요청 파라미터)를 했는지 기록.
+    - 콘솔 클릭, AWS CLI, SDK, 다른 AWS 서비스가 호출한 것도 모두 API 이벤트로 남습니다.
+- **이벤트(Event)**
+    - CloudTrail이 남기는 로그 단위.
+    - 예: `RunInstances`, `CreateBucket`, `DeleteTable`.
+- **저장 위치**
+    - 기본적으로 **90일 동안 이벤트 히스토리를 콘솔에서 조회**할 수 있음.
+    - Trail(추적기)을 설정하면, 로그를 **S3 버킷·CloudWatch Logs·EventBridge**로 전송해 장기 보관·분석 가능.
+
+###### 단 한줄로 표현하면 CloudTrail은 "누가 언제 무슨 요청을 했는지"를 기록
+
+---
