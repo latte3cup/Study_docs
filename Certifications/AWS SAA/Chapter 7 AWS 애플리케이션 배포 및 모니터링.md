@@ -1,9 +1,28 @@
-- [[#AWS Lambda|AWS Lambda]]
-- [[#Amazon API Gateway - 서버리스|Amazon API Gateway - 서버리스]]
-- [[#Amazon Kinesis|Amazon Kinesis]]
-- [[#AWS CloudFront|AWS CloudFront]]
-- [[#Amazon Route 53|Amazon Route 53]]
+- [애플리케이션 배포](#%EC%95%A0%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98%20%EB%B0%B0%ED%8F%AC)
+	- [AWS Lambda](#AWS%20Lambda)
+	- [Amazon API Gateway - 서버리스](#Amazon%20API%20Gateway%20-%20%EC%84%9C%EB%B2%84%EB%A6%AC%EC%8A%A4)
+	- [Amazon Kinesis](#Amazon%20Kinesis)
+	- [AWS CloudFront](#AWS%20CloudFront)
+	- [Amazon Route 53](#Amazon%20Route%2053)
+	- [AWS 웹 어플리케이션 방화벽 (WAF)](#AWS%20%EC%9B%B9%20%EC%96%B4%ED%94%8C%EB%A6%AC%EC%BC%80%EC%9D%B4%EC%85%98%20%EB%B0%A9%ED%99%94%EB%B2%BD%20(WAF))
+	- [Amazon Sheild](#Amazon%20Sheild)
+	- [Amazon SQS (Simple Queue Service)](#Amazon%20SQS%20(Simple%20Queue%20Service))
+	- [Amazon SNS (Simple Notification Service)](#Amazon%20SNS%20(Simple%20Notification%20Service))
+	- [AWS Step Function & Amazon Simple Workflow(SWF)](#AWS%20Step%20Function%20&%20Amazon%20Simple%20Workflow(SWF))
+	- [AWS Elastic Beanstalk](#AWS%20Elastic%20Beanstalk)
+	- [AWS  OpsWorks](#AWS%20%20OpsWorks)
+	- [Amazon Cognito](#Amazon%20Cognito)
+	- [Amazon Elastic MapReduce (EMR) - 서버리스 아님](#Amazon%20Elastic%20MapReduce%20(EMR)%20-%20%EC%84%9C%EB%B2%84%EB%A6%AC%EC%8A%A4%20%EC%95%84%EB%8B%98)
+	- [AWS CloudFormation](#AWS%20CloudFormation)
+- [AWS 모니터링 서비스](#AWS%20%EB%AA%A8%EB%8B%88%ED%84%B0%EB%A7%81%20%EC%84%9C%EB%B9%84%EC%8A%A4)
+	- [AWS CloudWatch](#AWS%20CloudWatch)
+	- [AWS CloudTrail](#AWS%20CloudTrail)
+	- [AWS Config](#AWS%20Config)
+	- [Amazon VPC Flow Logs](#Amazon%20VPC%20Flow%20Logs)
+	- [AWS Trusted Advisor](#AWS%20Trusted%20Advisor)
+	- [AWS Organizations](#AWS%20Organizations)
 
+---
 
 ### 애플리케이션 배포
 
@@ -175,7 +194,7 @@ Amazon Kinesis는 크게 네 가지 서비스로 나뉩니다.
 - 제어 동작(Behaviors) - 캐시 동작(Cache Behavior)” : **라이언트 요청이 들어왔을 때 CloudFront가 어떤 오리진을 선택하고, 어떻게 캐싱·보안·라우팅을 적용할지**를 정의하는 설정
   CDN과 관련된 정책의 허용, 요청 타입에 따른 반응 변경, 객체의 캐싱 기능 조절 등 CloudFront의 세부적인 제어 동작을 의미
 
-#### 주요 제어 동작
+##### 주요 제어 동작
 1. 경로 패턴 매칭(Path Pattern Matching) 
 	- URL 경로에 따라 캐시 제어 동작 설정
 	- 경로 패턴에 따라 Http/s 프로토콜 설정, 헤더 또는 캐싱 옵션, 쿠키 및 쿼리 문자열, 접근제한 등의 방식으로 특정 오리진으로 요청을 전송함.
@@ -189,7 +208,7 @@ Amazon Kinesis는 크게 네 가지 서비스로 나뉩니다.
 5. 프로토콜 정책 : HTTP/ HTTPS 구별하게함.
 6. 유지시간 : TTL을 통해 엣지 캐시가 유지되는 시간 설정.
 7. gzip 압축 : 배포 설정시 자동 gzip 압축을 적용하여 대역폭 절감, 속도 향상, 오리진 부하 감소 가능
-#### 배포 방식
+##### 배포 방식
 ##### 1. 배포 유형 (Distribution Type)
 현재 CloudFront에서는 사실상 **웹 배포(Web Distribution)** 방식만 사용합니다.
 - **웹 배포 (Web Distribution)**
