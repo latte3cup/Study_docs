@@ -553,3 +553,18 @@ Amazon Kinesis는 크게 네 가지 서비스로 나뉩니다.
     - 기업용 서비스에서는 중앙 인증 시스템과 통합(SAML, AD, Okta 등) 가능.
 
 ---
+#### Amazon Elastic MapReduce (EMR)
+- 대규모 데이터 처리와 분석을 위한 클라우드 기반 분산 처리 서비스
+- **파치 하둡(Apache Hadoop)**, **아파치 스파크(Apache Spark)**, **아파치 하이브(Apache Hive)** 같은 오픈소스 빅데이터 프레임워크를 AWS에서 손쉽게 사용할 수 있도록 관리형으로 제공
+##### 핵심 개념
+1. **클러스터(Cluster)**
+    - 여러 대의 EC2 인스턴스로 구성된 분산 환경.
+    - 마스터 노드, 코어 노드, 태스크 노드로 구분되어 역할을 나눔.
+2. **작업(Job / Step)**
+    - 데이터를 분석·처리하기 위해 제출하는 실행 단위.
+    - Spark SQL, Hive 쿼리, MapReduce 작업 등을 올려 실행할 수 있음.
+3. **데이터 저장소 연동**
+    - Amazon S3와 긴밀히 통합 → Data Lake 형태로 원천 데이터를 S3에 두고 처리.
+    - HDFS(Hadoop Distributed File System) 대신 S3를 주로 사용.
+
+---
