@@ -534,3 +534,22 @@ Amazon Kinesis는 크게 네 가지 서비스로 나뉩니다.
 
 ---
 #### Amazon Cognito
+- **사용자 인증(Authentication), 권한 부여(Authorization), 사용자 관리(User Management)를 제공하는 AWS 서비스**
+##### 주요 기능
+1. **사용자 풀(User Pool)**
+    - 자체 회원가입/로그인 시스템을 구축할 수 있는 기능.
+    - 이메일, 전화번호, 소셜 로그인(Google, Facebook, Apple 등) 모두 지원.
+    - 다중 요소 인증(MFA, Multi-Factor Authentication)과 비밀번호 정책 설정 가능.
+2. **자격 증명 풀(Identity Pool)**
+    - 인증된 사용자에게 **AWS 리소스 접근 권한**을 부여하는 기능.
+    - 예: 로그인한 사용자가 S3 버킷에서 특정 파일을 다운로드하거나, DynamoDB를 읽도록 권한을 제한할 수 있음.
+    - IAM(Identity and Access Management)과 연동되어 세밀한 권한 제어 가능.
+3. **토큰 기반 인증**
+    - OpenID Connect(OIDC), OAuth 2.0, SAML 같은 표준 프로토콜 지원.
+    - 로그인 성공 시 JWT(JSON Web Token)를 발급하여 API Gateway, Lambda 등과 안전하게 연동.
+4. **확장성 및 보안**
+    - 수백만 사용자까지 자동 확장 가능.
+    - 데이터는 AWS의 보안 기준에 맞춰 저장.
+    - 기업용 서비스에서는 중앙 인증 시스템과 통합(SAML, AD, Okta 등) 가능.
+
+---
