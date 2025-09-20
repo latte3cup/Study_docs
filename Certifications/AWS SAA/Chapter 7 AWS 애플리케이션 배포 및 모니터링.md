@@ -710,3 +710,53 @@ CloudTrail은 API 호출 기록을 남기면, Config는 상태를 남김
 
 ---
 #### Amazon VPC Flow Logs
+- **VPC(가상 사설 클라우드, Virtual Private Cloud)에서 발생하는 네트워크 트래픽 정보를 기록하는 기능**
+
+##### 핵심 개념
+- **VPC Flow Logs** = 네트워크 레벨의 “흐름 기록(Flow Record)”.
+- VPC, 서브넷, 네트워크 인터페이스(ENI) 단위(레벨)에 따라 트래픽 정보를 캡처.
+- 지정한 레벨에 따라서만 기록됨
+- 이는 네트워크 구조상 상하 관계를 갖고 있으나 중복 기록됨.
+- 수집된 로그는 **CloudWatch Logs** 또는 **S3**로 저장.
+
+##### 기록되는 정보
+각 로그 레코드에는 다음과 같은 필드가 포함:
+- **source/destination IP** (출발지/목적지 IP)
+- **source/destination port** (출발지/목적지 포트)
+- **protocol** (TCP, UDP 등)
+- **action** (ACCEPT / REJECT)
+- **bytes, packets** (송수신 바이트·패킷 수)
+- **start/end time** (세션 시작/종료 시간)
+
+👉 즉, “누가 어디로 연결을 시도했는지, 허용되었는지 거부되었는지, 얼마나 데이터가 오갔는지”를 알 수 있습니다.
+
+##### 주요 기능과 장점
+- **보안 감사(Security Audit)**
+    - 인스턴스가 예상치 못한 외부 IP와 통신하는지 확인.
+    - 보안 그룹/네트워크 ACL 규칙이 제대로 동작하는지 검증.
+- **네트워크 문제 해결(Troubleshooting)**
+    - 트래픽이 막히는 이유가 보안 그룹 때문인지, 라우팅 때문인지 구분 가능.
+- **성능/운영 분석(Analytics)**
+    - 트래픽 양, 상위 통신 IP, 특정 포트 사용량 파악.
+    - Athena, OpenSearch와 연동해 심층 분석 가능.
+
+---
+#### AWS Trusted Advisor
+- **AWS 환경을 점검해 최적화 권고사항을 제공하는 “자동 컨설턴트”**
+
+##### 핵심 개념
+- AWS 리소스와 설정을 점검해 **비용, 보안, 성능, 내결함성, 서비스 할당량** 측면에서 모범 사례(best practice)를 따르고 있는지 확인.
+- 결과를 **권장 사항(Recommendation)** 형태로 보여주고, 바로 개선할 수 있는 구체적인 가이드 제공.
+##### 점검 카테고리 (5가지 영역)
+1. **비용 최적화 (Cost Optimization)**
+    - 사용하지 않는 EC2 인스턴스, 과도한 EBS 볼륨, 낮은 사용률의 Elastic IP 등 식별.
+2. **보안 (Security)**
+    - 퍼블릭 접근 가능한 S3 버킷, 약한 IAM 권한, MFA 미사용 계정 탐지.
+3. **성능 (Performance)**
+    - 서비스 제한(throughput, IOPS) 확인, 권장 인스턴스 타입 제안.
+4. **내결함성 (Fault Tolerance)** ( 장애 대응성 )
+    - Auto Scaling 미구성, 백업 미활성화 리소스, AZ 분산 부족.
+5. **서비스 할당량 (Service Limits)**
+    - 계정별 리소스 한도(예: EC2 vCPU, RDS 인스턴스 수)가 임계치에 근접했는지 알림.
+
+---
