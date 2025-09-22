@@ -399,3 +399,73 @@ DynamoDB의 데이터 검색은 항상 **기본 키 기반**으로 동작합니�
 	- 스케일아웃(Scale-Out) 쉬움, 복잡한 기능은 없음.
 
 -----
+#### Amazon Neptune
+- **완전관리형 그래프 데이터베이스(Graph Database)** 서비스
+- ACID 조ㅓ건 충족
+##### 핵심 개념
+- **그래프 DB**: 데이터를 **노드(Node)** 와 **엣지(Edge)** 로 저장하고, 노드와 노드 사이의 **연결 관계(Relationship)** 를 탐색하는 데 최적화된 데이터베이스.
+- Amazon Neptune = **AWS 관리형, 고성능, 고가용성 그래프 DB**.
+- 특징: **연결 중심 데이터**를 빠르게 처리할 수 있음.
+##### 지원 데이터 모델
+Neptune은 두 가지 그래프 모델을 지원합니다.
+1. **Property Graph 모델**
+    - 노드와 엣지에 속성을 부여 가능.
+    - 쿼리 언어: **Apache TinkerPop Gremlin**.
+2. **RDF(Resource Description Framework) 모델**
+    - 데이터를 “주어-술어-목적어(Triple)” 형식으로 표현.
+    - 쿼리 언어: **SPARQL**.
+👉 이중 모델 지원은 Neptune의 큰 특징.
+
+##### 활용 전략
+- 소셜 네트워크
+- 추천 시스템
+- 지식 그래프
+- 네트워크/ IT 운영 및 데이터 센터 관리
+- 생명과학
+- 경로 최적화 연구
+- 사기행위 분석 등
+
+---
+#### Amazon DocumentDB
+- **완전관리형 문서(Document) 데이터베이스** 서비스
+- **MongoDB 호환 API** 를 제공하는 문서 지향(Document-oriented) DB.
+- 데이터를 **JSON 문서 형식**으로 저장하고 쿼리할 수 있음.
+- AWS에서 **확장성, 고가용성, 보안**을 갖춘 관리형 서비스로 제공.
+- 목적: MongoDB 오픈소스를 직접 운영하지 않고, 클라우드 네이티브 방식으로 사용 가능하게 함.
+##### 데이터 모델
+(1) 문서(Document)
+- MongoDB의 기본 저장 단위.
+- JSON과 비슷하지만, 내부적으로는 **BSON(Binary JSON)** 포맷을 사용.
+- 예시:
+```
+	`{
+	  "user_id": 101,
+	  "name": "Alice",
+	  "age": 30,
+	  "orders": ["book", "pen"],
+	  "address": { "city": "Seoul", "zip": "12345" }
+	}
+```
+(2) 컬렉션(Collection)
+- 문서(Document)들의 집합.
+- RDBMS의 “테이블”에 해당.
+- 같은 컬렉션 안에서도 문서 구조가 달라도 됨.
+(3) 데이터베이스(Database)
+- 컬렉션(Collection)의 집합.
+
+##### 주요 특징
+(1) 스키마리스(Schema-less)
+- 필드 구조가 문서마다 달라도 허용.
+- 유연한 구조로 빠른 개발 가능.
+(2) 풍부한 쿼리 언어
+- SQL 대신 JSON 기반 쿼리 문법 사용.
+- 조건 검색, 범위 검색, 집계(Aggregation Framework), 정렬, 인덱싱 지원.
+(3) 확장성(Scalability)
+- 수평 확장(Sharding) 지원.
+- 데이터가 커지면 여러 서버에 분산 저장 가능.
+(4) 고가용성(High Availability)
+- Replica Set 기능: 동일 데이터를 여러 노드에 복제.
+- 장애 발생 시 자동 Failover.
+(5) 다양한 사용 사례
+- IoT 로그, 소셜 네트워크, 전자상거래 카탈로그, CMS, 모바일 앱 데이터 저장.
+- 실시간 빅데이터 처리
